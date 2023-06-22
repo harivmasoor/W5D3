@@ -41,6 +41,7 @@ CREATE TABLE replies (
   parent_reply_id INTEGER,
   question_id INTEGER NOT NULL,
   user_id INTEGER NOT NULL,
+  body TEXT NOT NULL,
   FOREIGN KEY (parent_reply_id) REFERENCES replies(id),
   FOREIGN KEY (question_id) REFERENCES questions(id),
   FOREIGN KEY (user_id) REFERENCES users(id)
@@ -60,10 +61,28 @@ INSERT INTO
   users (fname, lname)
 VALUES
   ('Elilta', 'Abrham'),
-  ('Hari', "Masoor");
+  ('Hari', 'Masoor');
 
 INSERT INTO
   questions (title, body, user_id)
 VALUES
   ('App Academy', 'What are we doing?', 1),
   ('Countries', 'Where is Eritrea', 2);
+
+INSERT INTO
+  replies ( question_id, parent_reply_id, user_id, body)
+VALUES
+  ((SELECT id FROM questions WHERE title = "App Academy"),
+  NULL,
+  (SELECT id FROM users WHERE fname = "Elilta" AND lname = "Abrham"),
+  "hey what"
+);
+
+INSERT INTO
+  replies ( question_id, parent_reply_id, user_id, body)
+VALUES
+  ((SELECT id FROM questions WHERE title = "App Academy"),
+  (SELECT id FROM replies WHERE body = "Did you say NOW NOW NOW?"),
+  (SELECT id FROM users WHERE fname = "Elilta" AND lname = "Abrham"),
+  "I think he said MEOW MEOW MEOW."
+);
